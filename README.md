@@ -1,17 +1,17 @@
-GraphGNN — KG → KGE → GNN → QA (pipeline)
-Pequeña documentación para el script graphgnn.py (prototipo de investigación).
+# knowledgegraph-gnn-qa
 
-Resumen
+Documentación para el script graphgnn.py (prototipo de investigación).
+
 Este script implementa un pipeline en español que:
 
-Construye un Knowledge Graph (nodos: lemas y noun‑chunks; aristas: co‑ocurrencia ventana=5 + dependencias).
-Calcula PPMI para ponderar aristas.
-Entrena KGE (CompGCN por defecto; fallback/handling de triples inversos y fallback a RotatE si hace falta).
-Entrena un GNN (GAT) usando las incrustaciones KGE como features.
-Responde consultas en español priorizando respuestas nominales concisas y ofrece comparación opcional con una respuesta de LLM local (ollama).
-Genera visualizaciones (KG, embeddings, comparaciones) y tiene un modo --quick para pruebas rápidas.
+1. Construye un Knowledge Graph (nodos: lemas y noun‑chunks; aristas: co‑ocurrencia ventana=5 + dependencias).
+2. Calcula PPMI para ponderar aristas.
+3. Entrena KGE (CompGCN por defecto; fallback/handling de triples inversos y fallback a RotatE si hace falta).
+4. Entrena un GNN (GAT) usando las incrustaciones KGE como features.
+5. Responde consultas en español priorizando respuestas nominales concisas y ofrece comparación opcional con una respuesta de LLM local (ollama).
+6. Genera visualizaciones (KG, embeddings, comparaciones) y tiene un modo --quick para pruebas rápidas.
 
-Requisitos (alto nivel)
+# Requisitos:
 
 Python 3.8+ (se recomienda 3.10+).
 Paquetes principales: spaCy (modelo es_core_news_sm), numpy, networkx, matplotlib, scikit-learn, umap‑learn (opcional), torch, torch‑geometric, pykeen, rapidfuzz (opcional), tiktoken (opcional), ollama (opcional).
@@ -35,7 +35,7 @@ py -3 "C:\Users\<tu_usuario>\Desktop\graphgnn.py" --quick --no-llm
 
 El script pedirá una consulta en español y generará imágenes PNG y una respuesta concisa.
 
-Diseño y decisiones clave
+# Diseño y decisiones clave
 
 Nodos: lemas + noun‑chunks (multi‑palabra).
 Aristas: co‑ocurrencia (ventana 5) y dependencias sintácticas; PPMI como peso.
@@ -45,7 +45,7 @@ Entity linking: token overlap + rapidfuzz/difflib fallback (no TF‑IDF por requ
 Razonamiento por caminos: paths simples hasta longitud L=3, puntuación basada en número/inversa de longitud.
 Preferencia en respuesta: se priorizan NOUN/PROPN y noun‑chunks que aparecen en los documentos originales.
 
-Salidas generadas
+# Salidas generadas
 
 Figuras: global_kg.png, kge_embeddings.png, gnn_embeddings.png, query_graph.png, comparison_*.
 Si --run-llm: ficheros llm_response_<safe_name>.txt.
@@ -53,7 +53,7 @@ Si --run-llm: ficheros llm_response_<safe_name>.txt.
 
 
 
-Reproducibilidad
+# Reproducibilidad
 Use un entorno virtual y guarde dependencias:
 
 py -3 -m pip freeze > deps.txt
@@ -63,13 +63,15 @@ Capture información del sistema (Windows PowerShell ejemplos):
 py -3 --version
 Get-CimInstance Win32_ComputerSystem | select TotalPhysicalMemory
 wmic cpu get name,NumberOfCores,NumberOfLogicalProcessors
+
+
 # si aplica:
 nvidia-smi
 
 
 Fije semillas en NumPy y PyTorch para reducir aleatoriedad; establezca random_state en UMAP/TSNE cuando proceda.
 
-Problemas comunes y soluciones
+# Problemas comunes y soluciones
 
 PyKEEN/CompGCN error por falta de triples inversos: el script reconstruye TriplesFactory con inversos y reintenta; si persiste, usar fallback RotatE.
 spaCy: si falta el modelo, ejecutar py -3 -m spacy download es_core_news_sm.
@@ -77,7 +79,7 @@ PyG: siga las instrucciones específicas para la versión de PyTorch y su plataf
 Ollama: si no lo tiene, use --no-llm.
 
 
-Extensiones sugeridas
+# Extensiones sugeridas
 Persistir embeddings en un vector DB para producción.
 Convertir el script a microservicio (FastAPI) que devuelva únicamente la respuesta corta.
 Añadir pruebas unitarias para extracción de triples, creación de TriplesFactory y entrenamiento rápido en modo --quick.
