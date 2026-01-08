@@ -1,9 +1,7 @@
 """
 graphgnn.py
 
-Versión modular y comentada del pipeline end-to-end solicitado por el usuario.
-
-Características implementadas (resumen):
+Características:
 - Preprocesamiento con spaCy: tokenización, lematización, NER y parse de dependencias.
 - Construcción de KG de co-ocurrencia (window-based w=5) y opción de edges por dependencia.
 - Cálculo de frecuencia y PMI para edges.
@@ -1538,4 +1536,5 @@ if __name__ == '__main__':
         if res:
             print(res[0]['entity'])
         else:
+
             print('No puedo determinar una respuesta.')
