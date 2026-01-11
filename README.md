@@ -1,15 +1,18 @@
 # knowledgegraph-gnn-qa
 
-Documentación para el script graphgnn.py (prototipo de investigación).
-
-Este script implementa un pipeline en español que:
-
-1. Construye un Knowledge Graph (nodos: lemas y noun‑chunks; aristas: co‑ocurrencia ventana=5 + dependencias).
-2. Calcula PPMI para ponderar aristas.
-3. Entrena KGE (CompGCN por defecto; fallback/handling de triples inversos y fallback a RotatE si hace falta).
-4. Entrena un GNN (GAT) usando las incrustaciones KGE como features.
-5. Responde consultas en español priorizando respuestas nominales concisas y ofrece comparación opcional con una respuesta de LLM local (ollama).
-6. Genera visualizaciones (KG, embeddings, comparaciones) y tiene un modo --quick para pruebas rápidas.
+1. Documentación para el script graphgnn.py (prototipo de investigación).
+2. Este script implementa un pipeline en español que:
+3. Construcción del KG: del texto → grafo por coocurrencias + dependencias.
+4. Tripletas RDF-like: extrae <s, r, o> del grafo.
+5. Embeddings KG: entrena CompGCN → vectores para entidades y relaciones.
+6. Características para GNN: combina embedding de entidad + relaciones.
+7. GNN global: entrena GAT con link prediction → embeddings estructurales.
+8. Consulta: parsea consulta y crea mini-grafo.
+9. Mapeo al KG: conecta tokens de la consulta con entidades del KG.
+10. Subgrafo k-hop: extrae vecindad relevante alrededor de las semillas.
+11. Ajuste per-query: reentrena CompGCN + GAT en zona relevante.
+12. Ranking por rutas: combina similitud KG + GNN + paths + heurísticas lingüísticas.
+13. Refinamiento: convierte el resultado en frase breve, nominal y legible.
 
 # Requisitos:
 
